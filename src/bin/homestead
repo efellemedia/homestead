@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+main() {
+    local HBOX_PATH=~/.homestead
+    local SUBL_PATH='/usr/local/bin/subl'
+    local ATOM_PATH='/usr/local/bin/atom'
+
+    if [ "$1" = "config"]; then
+        if [ -n "$2" ]; then
+            TXT_EDITOR="$2"
+        elif [ -e "$SUBL_PATH" ]; then
+            TXT_EDITOR='subl'
+        elif [ -e "$ATOM_PATH" ]; then
+            TXT_EDITOR='atom'
+        else
+            TXT_EDITOR='nano'
+        fi
+
+        $TXT_EDITOR $HBOX_PATH/Homestead.yaml
+        return
+    fi
+
+    if [ "$1" = "vhosts"]; then
+        if [ -n "$2" ]; then
+            TXT_EDITOR="$2"
+        elif [ -e "$SUBL_PATH" ]; then
+            TXT_EDITOR='subl'
+        elif [ -e "$ATOM_PATH" ]; then
+            TXT_EDITOR='atom'
+        else
+            TXT_EDITOR='nano'
+        fi
+
+        sudo $TXT_EDITOR /etc/hosts
+        return
+    fi
+
+    local CURRENT_LOCATION=$PWD
+	cd $HBOX_PATH
+	vagrant $*
+	cd $CURRENT_LOCATION
+}
+
+main $@
